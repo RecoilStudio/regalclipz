@@ -46,10 +46,13 @@ header{padding:44px 0 28px;text-align:center}
 .track::-webkit-scrollbar{display:none}
 .vid{flex:0 0 min(340px,82vw);scroll-snap-align:center;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.25s}
 .vid:hover{border-color:rgba(24,255,107,.6);box-shadow:0 10px 40px rgba(24,255,107,.12)}
-.vid .frame{position:relative;background:#000;aspect-ratio:9/16;display:flex;align-items:center;justify-content:center}
+.vid .frame{position:relative;min-height:320px;padding:8px 8px 0;display:flex;align-items:flex-start;justify-content:center}
+.vid .frame .twitter-tweet,.vid .frame iframe{margin:0!important;max-width:100%!important}
+.vid .frame .miss{display:flex}
 .vid video{width:100%;height:100%;object-fit:contain;display:block;background:#000}
-.vid .miss{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--mute);font-size:14px}
-.vid.bad .miss{display:flex}.vid.bad video{display:none}
+.vid .miss{position:absolute;inset:0;display:flex;z-index:0;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--mute);font-size:14px}
+.vid .frame>*:not(.miss){position:relative;z-index:1}
+.vid.ok .miss{display:none}
 .vid .bar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:13px}
 .vid .bar b{color:var(--mute);font-weight:600}
 .vid .bar a{color:var(--green);font-weight:700;text-decoration:none}
@@ -61,6 +64,30 @@ header{padding:44px 0 28px;text-align:center}
 .dots i.on{background:var(--green);width:22px;border-radius:6px;box-shadow:0 0 10px rgba(24,255,107,.6)}
 .allx{display:inline-block;margin-top:22px;color:var(--green);font-weight:700;text-decoration:none}
 @media(max-width:700px){.arr{display:none}}
+.cform{max-width:640px;display:grid;gap:14px}
+.cform label{font-size:13px;font-weight:600;color:var(--mute);display:grid;gap:6px}
+.cform input,.cform select,.cform textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--text);font:500 15px 'Inter',sans-serif;outline:none;transition:.2s}
+.cform textarea{min-height:140px;resize:vertical}
+.cform input:focus,.cform select:focus,.cform textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(24,255,107,.15)}
+.cform .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cform .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+.cform button{justify-self:start;border:0;cursor:pointer;padding:13px 28px;border-radius:999px;font:800 15px 'Inter',sans-serif;color:#03150a;background:linear-gradient(135deg,#eafff3,var(--green) 55%,var(--green2));box-shadow:0 0 24px rgba(24,255,107,.35);transition:.25s}
+.cform button:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.cform button:disabled{opacity:.6;cursor:wait;transform:none}
+.fmsg{min-height:22px;font-size:14px;font-weight:600}
+.fmsg.ok{color:var(--green)}.fmsg.err{color:#ff6b6b}
+@media(max-width:600px){.cform .row{grid-template-columns:1fr}}
+.svc{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-bottom:46px}
+.svc .card .ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;background:rgba(24,255,107,.1);border:1px solid rgba(24,255,107,.35)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:0 0 46px;counter-reset:st}
+.steps div{counter-increment:st;position:relative;padding:18px 18px 18px 58px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+.steps div:before{content:counter(st);position:absolute;left:16px;top:16px;width:28px;height:28px;border-radius:50%;background:var(--green);color:#03150a;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:14px}
+.steps b{display:block;margin-bottom:3px}.steps span{color:var(--mute);font-size:13px}
+h3.sec{font-size:22px;font-weight:900;font-style:italic;text-transform:uppercase;margin:0 0 6px}
+.checks{display:flex;flex-wrap:wrap;gap:10px}
+.checks label{display:flex;flex-direction:row;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card);cursor:pointer;color:var(--text);font-size:14px;transition:.2s}
+.checks label:has(input:checked){border-color:var(--green);background:rgba(24,255,107,.1)}
+.checks input{width:auto;accent-color:var(--green)}
 .fab{position:fixed;right:18px;bottom:18px;z-index:20;width:62px;height:62px;border-radius:50%;padding:0;border:0;cursor:pointer;background:none;opacity:0;transform:translateY(20px) scale(.8);pointer-events:none;transition:.35s;animation:float 5s ease-in-out infinite}
 .fab.show{opacity:1;transform:none;pointer-events:auto}
 .fab img{width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 2px var(--green),0 0 26px rgba(24,255,107,.6)}
@@ -125,16 +152,18 @@ footer small{display:block;margin-top:8px;opacity:.7}
 
 <nav><div class="wrap">
   <button class="on" data-t="clips">Clips</button>
+  <button data-t="services">Services</button>
   <button data-t="streamers">Gamdom Streamers</button>
   <button data-t="links">Links</button>
   <button data-t="faq">FAQ</button>
+  <button data-t="contact">Contact</button>
 </div></nav>
 
 <main class="wrap">
 
 <section id="clips" class="on">
   <h2>Latest Clips</h2>
-  <p class="sub">The biggest Gamdom moments. Swipe or use the arrows.</p>
+  <p class="sub">The biggest Gamdom moments, straight from X. Swipe or use the arrows.</p>
   <div class="car">
     <button class="arr l" id="prev" aria-label="Previous">&#8592;</button>
     <div class="track" id="track"></div>
@@ -142,6 +171,49 @@ footer small{display:block;margin-top:8px;opacity:.7}
   </div>
   <div class="dots" id="dots"></div>
   <a class="allx" href="https://x.com/RegalClipz" target="_blank" rel="noopener">See every clip on X →</a>
+</section>
+
+<section id="services">
+  <h2>Services</h2>
+  <p class="sub">Clips that make your best moments travel. Built for streamers who want to grow.</p>
+  <div class="svc" id="svcGrid"></div>
+
+  <h3 class="sec">How it works</h3>
+  <p class="sub">Simple from first message to finished clips.</p>
+  <div class="steps">
+    <div><b>Request a quote</b><span>Tell us about your stream and what you need.</span></div>
+    <div><b>Get a price</b><span>You get a custom quote, no surprises.</span></div>
+    <div><b>We clip</b><span>Your best moments, edited and posted.</span></div>
+    <div><b>You grow</b><span>More eyes on your stream, every week.</span></div>
+  </div>
+
+  <h3 class="sec" id="quote">Get a quote</h3>
+  <p class="sub">Fill this in and you'll get a custom quote back.</p>
+  <form class="cform" id="qform" novalidate>
+    <div class="row">
+      <label>Name<input name="name" required autocomplete="name"></label>
+      <label>Email<input name="email" type="email" required autocomplete="email"></label>
+    </div>
+    <div class="row">
+      <label>Your channel link<input name="channel" placeholder="kick.com/yourname" required></label>
+      <label>Main platform
+        <select name="platform"><option>Kick</option><option>Twitch</option><option>YouTube</option><option>Other</option></select>
+      </label>
+    </div>
+    <label>What do you need?
+      <div class="checks" id="qchecks"></div>
+    </label>
+    <div class="row">
+      <label>How many clips per month?
+        <select name="volume"><option>Just a few</option><option>10 to 20</option><option>20 to 50</option><option>50+</option><option>Not sure yet</option></select>
+      </label>
+      <label>Budget (optional)<input name="budget" placeholder="e.g. $200 a month"></label>
+    </div>
+    <label>Anything else we should know?<textarea name="message"></textarea></label>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button type="submit">Request my quote</button>
+    <div class="fmsg" role="status"></div>
+  </form>
 </section>
 
 <section id="streamers">
@@ -171,6 +243,32 @@ footer small{display:block;margin-top:8px;opacity:.7}
   </div>
 </section>
 
+<section id="contact">
+  <h2>Contact</h2>
+  <p class="sub">Want clips of your stream, a collab, or have a business enquiry? Send a message.</p>
+  <form class="cform" id="cform" novalidate>
+    <div class="row">
+      <label>Name<input name="name" required autocomplete="name"></label>
+      <label>Email<input name="email" type="email" required autocomplete="email"></label>
+    </div>
+    <div class="row">
+      <label>Your Kick / X / YouTube link<input name="channel" placeholder="kick.com/yourname"></label>
+      <label>What's it about?
+        <select name="topic">
+          <option>Clipping for my stream</option>
+          <option>Collab / partnership</option>
+          <option>Business enquiry</option>
+          <option>Something else</option>
+        </select>
+      </label>
+    </div>
+    <label>Message<textarea name="message" required></textarea></label>
+    <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button type="submit" id="csend">Send message</button>
+    <div class="fmsg" id="cmsg" role="status"></div>
+  </form>
+</section>
+
 </main>
 
 <footer>
@@ -181,21 +279,33 @@ footer small{display:block;margin-top:8px;opacity:.7}
 
 <script>
 /* ===== EDIT ME ===== */
-// One entry per clip. Video files go in a "clips" folder next to index.html.
-// file: name of the mp4 inside /clips   x: link to the original post on X   title: optional label
+// One entry per clip. x: link to the post on X   title: optional label
 const CLIPS = [
-  {file:"clip01.mp4", x:"https://x.com/RegalClipz/status/2117078499244855402", title:""},
-  {file:"clip02.mp4", x:"https://x.com/RegalClipz/status/2117076748747903374", title:""},
-  {file:"clip03.mp4", x:"https://x.com/RegalClipz/status/2116729904146329858", title:""},
-  {file:"clip04.mp4", x:"https://x.com/RegalClipz/status/2116726713791160763", title:""},
-  {file:"clip05.mp4", x:"https://x.com/RegalClipz/status/2116682401892204798", title:""},
-  {file:"clip06.mp4", x:"https://x.com/RegalClipz/status/2116643095035166821", title:""},
-  {file:"clip07.mp4", x:"https://x.com/RegalClipz/status/2116353165671223729", title:""},
-  {file:"clip08.mp4", x:"https://x.com/RegalClipz/status/2115996413024952535", title:""},
-  {file:"clip09.mp4", x:"https://x.com/RegalClipz/status/2115988898073723149", title:""},
-  {file:"clip10.mp4", x:"https://x.com/RegalClipz/status/2115969928566280269", title:""},
-  {file:"clip11.mp4", x:"https://x.com/RegalClipz/status/2115963003233579379", title:""},
+  {x:"https://x.com/RegalClipz/status/2117078499244855402", title:""},
+  {x:"https://x.com/RegalClipz/status/2117076748747903374", title:""},
+  {x:"https://x.com/RegalClipz/status/2116729904146329858", title:""},
+  {x:"https://x.com/RegalClipz/status/2116726713791160763", title:""},
+  {x:"https://x.com/RegalClipz/status/2116682401892204798", title:""},
+  {x:"https://x.com/RegalClipz/status/2116643095035166821", title:""},
+  {x:"https://x.com/RegalClipz/status/2116353165671223729", title:""},
+  {x:"https://x.com/RegalClipz/status/2115996413024952535", title:""},
+  {x:"https://x.com/RegalClipz/status/2115988898073723149", title:""},
+  {x:"https://x.com/RegalClipz/status/2115969928566280269", title:""},
+  {x:"https://x.com/RegalClipz/status/2115963003233579379", title:""},
 ];
+
+// Services shown on the Services tab. Edit freely: icon, title, text.
+const SERVICES = [
+  {icon:"🎬", title:"Stream Highlights", text:"The big wins, funny moments and clutch plays cut from your stream and posted fast."},
+  {icon:"📱", title:"Short-Form Clips", text:"Vertical, fast-paced edits made for X, TikTok, Shorts and Reels."},
+  {icon:"🏆", title:"Best-Of Compilations", text:"Weekly or monthly montages of your top moments, ready for YouTube."},
+  {icon:"🚀", title:"Posting & Promotion", text:"Clips posted and pushed out so your content actually gets seen."},
+];
+
+// Contact form. Fill in ONE of these when you have it:
+//  formEndpoint: a Formspree (or similar) form URL, e.g. "https://formspree.io/f/xxxxxxx"  (messages go to the email set up there)
+//  email: a plain address, used as a fallback that opens the visitor's email app
+const CONTACT = { formEndpoint: "", email: "" };
 
 // Gamdom streamers shown on the Streamers tab.
 // Avatars: key = streamer name. Missing ones show an initial.
@@ -251,17 +361,51 @@ addEventListener('pointermove',e=>{const g=document.getElementById('glow');g.sty
 // Streamers
 document.getElementById('streamerGrid').innerHTML=STREAMERS.map(s=>{const a=AVATARS[s.name]?`<img class="av" src="${AVATARS[s.name]}" alt="${s.name}">`:`<div class="av ph">${s.name[0].toUpperCase()}</div>`;return `<a class="card" href="${s.kick}" target="_blank" rel="noopener"><div class="srow">${a}<div><h3>${s.name}</h3><p>${s.note}</p></div></div><div class="go">Watch on Kick →</div></a>`}).join('');
 
+
+// Services + forms
+document.getElementById('svcGrid').innerHTML=SERVICES.map(v=>`<div class="card"><div class="ic">${v.icon}</div><h3>${v.title}</h3><p>${v.text}</p></div>`).join('');
+document.getElementById('qchecks').innerHTML=SERVICES.map(v=>`<label><input type="checkbox" name="services" value="${v.title}">${v.title}</label>`).join('');
+
+function wireForm(form,subjectOf){
+  const msg=form.querySelector('.fmsg')||document.getElementById('cmsg'),btn=form.querySelector('button[type=submit]');
+  const say=(t,c)=>{msg.textContent=t;msg.className='fmsg '+(c||'')};
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const f=new FormData(form);
+    if(f.get('website'))return;                                  // spam trap
+    const name=(f.get('name')||'').trim(),email=(f.get('email')||'').trim();
+    if(!name||!/^\S+@\S+\.\S+$/.test(email)){say('Please add your name and a valid email.','err');return}
+    if(form.id==='cform'&&!(f.get('message')||'').trim()){say('Please add a message.','err');return}
+    f.set('_subject',subjectOf(f));
+    if(CONTACT.formEndpoint){
+      btn.disabled=true;say('Sending...');
+      try{
+        const r=await fetch(CONTACT.formEndpoint,{method:'POST',body:f,headers:{Accept:'application/json'}});
+        if(r.ok){form.reset();say('Sent. Thanks, we will get back to you soon.','ok')}else throw 0;
+      }catch(_){say('Something went wrong. Please try again in a moment.','err')}
+      btn.disabled=false;
+    }else if(CONTACT.email){
+      const lines=[];for(const [k,v] of f.entries()){if(k!=='website'&&k!=='_subject'&&v)lines.push(k+': '+v)}
+      location.href=`mailto:${CONTACT.email}?subject=${encodeURIComponent(subjectOf(f))}&body=${encodeURIComponent(lines.join('\n'))}`;
+      say('Opening your email app...','ok');
+    }else{
+      say('This form is not connected yet. Please DM @RegalClipz on X for now.','err');
+    }
+  });
+}
+wireForm(document.getElementById('cform'),f=>'RegalClipz: '+(f.get('topic')||'Contact'));
+wireForm(document.getElementById('qform'),f=>'Quote request: '+(f.get('name')||''));
+
 // Clips carousel
 const track=document.getElementById('track'),dots=document.getElementById('dots');
 CLIPS.forEach((c,i)=>{
-  const d=document.createElement('div');d.className='vid';
-  d.innerHTML=`<div class="frame"><video src="clips/${c.file}" controls playsinline preload="metadata"></video><div class="miss">Clip loading soon.<br>Watch it on X below.</div></div><div class="bar"><b>${c.title||'Clip '+(i+1)}</b><a href="${c.x}" target="_blank" rel="noopener">View on X →</a></div>`;
-  const v=d.querySelector('video');
-  v.addEventListener('error',()=>d.classList.add('bad'));
-  v.addEventListener('play',()=>track.querySelectorAll('video').forEach(o=>{if(o!==v)o.pause()}));
+  const d=document.createElement('div');d.className='vid';d.dataset.id=(c.x.match(/status\/(\d+)/)||[])[1]||'';
+  d.innerHTML=`<div class="frame"><div class="miss">Loading clip...<br>If it doesn't appear, watch it on X below.</div></div><div class="bar"><b>${c.title||'Clip '+(i+1)}</b><a href="${c.x}" target="_blank" rel="noopener">Watch on X →</a></div>`;
   track.appendChild(d);
   const dot=document.createElement('i');dot.onclick=()=>go(i);dots.appendChild(dot);
 });
+function loadEmbeds(){document.querySelectorAll('.vid').forEach(d=>{if(!d.dataset.id)return;twttr.widgets.createTweet(d.dataset.id,d.querySelector('.frame'),{theme:'dark',conversation:'none',dnt:true,align:'center',width:340}).then(n=>{if(n)d.classList.add('ok')})})}
+const tw=document.createElement('script');tw.src='https://platform.twitter.com/widgets.js';tw.async=true;tw.onload=loadEmbeds;document.body.appendChild(tw);
 const step=()=>{const f=track.firstElementChild;return f?f.offsetWidth+18:340};
 function go(i){track.scrollTo({left:i*step()-(track.clientWidth-step()+18)/2,behavior:'smooth'})}
 function cur(){return Math.max(0,Math.min(CLIPS.length-1,Math.round((track.scrollLeft+ (track.clientWidth-step()+18)/2)/step())))}
